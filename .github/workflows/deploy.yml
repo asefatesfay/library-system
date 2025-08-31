@@ -42,7 +42,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           echo "Building Docker image for project ${{ secrets.GCP_PROJECT_ID }}"
-          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/library-system-api
+          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/library-system-api --suppress-logs
 
       - name: Print gcloud run services list
         run: gcloud run services list --region us-west2
