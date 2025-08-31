@@ -42,7 +42,23 @@ jobs:
       - name: Build and push Docker image
         run: |
           echo "Building Docker image for project ${{ secrets.GCP_PROJECT_ID }}"
-          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/library-system-api --suppress-logs
+          BUILD_ID=$(gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/library-system-api --async --format="value(id)")
+          echo "Build ID: $BUILD_ID"
+          
+          # Wait for build to complete
+          echo "Waiting for build to complete..."
+          while true; do
+            STATUS=$(gcloud builds describe $BUILD_ID --format="value(status)")
+            echo "Build status: $STATUS"
+            if [ "$STATUS" = "SUCCESS" ]; then
+              echo "Build completed successfully!"
+              break
+            elif [ "$STATUS" = "FAILURE" ] || [ "$STATUS" = "TIMEOUT" ] || [ "$STATUS" = "CANCELLED" ]; then
+              echo "Build failed with status: $STATUS"
+              exit 1
+            fi
+            sleep 10
+          done
 
       - name: Print gcloud run services list
         run: gcloud run services list --region us-west2
