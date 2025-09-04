@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from routes.books import router as books_router
 from routes.users import router as users_router
 from routes.auth import router as auth_router
@@ -28,6 +29,11 @@ def startup_event():
         print(f"Error type: {type(e)}")
         import traceback
         traceback.print_exc()
+
+@app.get("/")
+async def root():
+    """Redirect to API documentation"""
+    return RedirectResponse(url="/docs")
 
 @app.get("/health")
 async def health_check():
