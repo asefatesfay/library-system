@@ -1,40 +1,78 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from typing import List
+from models import BookCreate, BookResponse, UserRole
+from auth import get_current_user, require_role
+from database import get_db, Book, User
 
 router = APIRouter()
-books_db = [
-    {"id": 1, "title": "The Great Gatsby", "author": "F. Scott Fitzgerald", "price": 12.99},
-    {"id": 2, "title": "To Kill a Mockingbird", "author": "Harper Lee", "price": 14.99}
-]
 
-@router.get("/books")
-def get_all_books():
-    return {"books": books_db}
+@router.get("/books", response_model=List[BookResponse])
+def get_all_books(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """Get all books - requires authentication"""
+    books = db.query(Book).all()
+    return books
 
-@router.get("/books/{id}")
-def get_book(id: int):
-    book = next((b for b in books_db if b["id"] == id), None)
-    if book:
-        return {"book": book}
-    return {"error": "Book not found"}
+@router.get("/books/{book_id}", response_model=BookResponse)
+def get_book(book_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """Get a specific book - requires authentication"""
+    book = db.query(Book).filter(Book.id == book_id).first()
+    if not book:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Book not found"
+        )
+    return book
 
-@router.post("/books")
-def create_book(book: dict):
-    book["id"] = len(books_db) + 1
-    books_db.append(book)
-    return {"book": book}
+@router.post("/books", response_model=BookResponse)
+def create_book(
+    book: BookCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role([UserRole.ADMIN, UserRole.LIBRARIAN]))
+):
+    """Create a book - requires admin or librarian role"""
+    db_book = Book(**book.dict())
+    db.add(db_book)
+    db.commit()
+    db.refresh(db_book)
+    return db_book
 
-@router.put("/books/{id}")
-def update_book(id: int, updated_book: dict):
-    book = next((b for b in books_db if b["id"] == id), None)
-    if book:
-        book.update(updated_book)
-        return {"book": book}
-    return {"error": "Book not found"}
+@router.put("/books/{book_id}", response_model=BookResponse)
+def update_book(
+    book_id: int,
+    book: BookCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role([UserRole.ADMIN, UserRole.LIBRARIAN]))
+):
+    """Update a book - requires admin or librarian role"""
+    db_book = db.query(Book).filter(Book.id == book_id).first()
+    if not db_book:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Book not found"
+        )
+    
+    for field, value in book.dict().items():
+        setattr(db_book, field, value)
+    
+    db.commit()
+    db.refresh(db_book)
+    return db_book
 
-@router.delete("/books/{id}")
-def delete_book(id: int):
-    index = next((i for i, b in enumerate(books_db) if b["id"] == id), None)
-    if index is not None:
-        books_db.pop(index)
-        return {"message": "Book deleted"}
-    return {"error": "Book not found"}
+@router.delete("/books/{book_id}")
+def delete_book(
+    book_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role([UserRole.ADMIN]))
+):
+    """Delete a book - requires admin role only"""
+    db_book = db.query(Book).filter(Book.id == book_id).first()
+    if not db_book:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Book not found"
+        )
+    
+    db.delete(db_book)
+    db.commit()
+    return {"message": "Book deleted successfully"}

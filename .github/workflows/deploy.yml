@@ -70,4 +70,5 @@ jobs:
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/library-system-api \
             --region us-west2 \
             --platform managed \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --set-env-vars JWT_SECRET_KEY="${{ secrets.JWT_SECRET_KEY }}"
