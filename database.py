@@ -1,15 +1,26 @@
+import os
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime, Float, Enum
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import enum
 
-# Database URL - using SQLite for simplicity
-SQLALCHEMY_DATABASE_URL = "sqlite:///./library.db"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+# Database URL - supports both SQLite (local) and PostgreSQL (production)
+DATABASE_URL = os.getenv(
+    "DATABASE_URL", 
+    "sqlite:///./library.db"  # Default to SQLite for local development
 )
+
+print(f"🔗 Connecting to database: {DATABASE_URL}")
+
+# Handle SQLite vs PostgreSQL connection args
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+    print("📁 Using SQLite database")
+else:
+    # For PostgreSQL/other databases
+    engine = create_engine(DATABASE_URL)
+    print("🐘 Using PostgreSQL database")
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

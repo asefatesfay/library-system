@@ -11,10 +11,22 @@ app = FastAPI(title="Library Management System", version="1.0.0")
 @app.on_event("startup")
 def startup_event():
     print("🚀 Starting up...")
-    create_tables()
-    print("📊 Tables created...")
-    create_seed_data()
-    print("✅ Startup complete!")
+    import os
+    database_url = os.getenv('DATABASE_URL')
+    print(f"Database URL configured: {bool(database_url)}")
+    print(f"Full DATABASE_URL: {database_url}")
+    print(f"JWT_SECRET_KEY configured: {bool(os.getenv('JWT_SECRET_KEY'))}")
+    
+    try:
+        create_tables()
+        print("📊 Tables created...")
+        create_seed_data()
+        print("✅ Startup complete!")
+    except Exception as e:
+        print(f"❌ Startup error: {e}")
+        print(f"Error type: {type(e)}")
+        import traceback
+        traceback.print_exc()
 
 @app.get("/health")
 async def health_check():
