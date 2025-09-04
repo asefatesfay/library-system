@@ -61,14 +61,16 @@ jobs:
           done
 
       - name: Print gcloud run services list
-        run: gcloud run services list --region us-west2
+        run: gcloud run services list --region us-west1
 
       - name: Deploy to Cloud Run
         run: |
           echo "Deploying to Cloud Run in project ${{ secrets.GCP_PROJECT_ID }}"
           gcloud run deploy library-system-api \
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/library-system-api \
-            --region us-west2 \
+            --region us-west1 \
             --platform managed \
             --allow-unauthenticated \
-            --set-env-vars JWT_SECRET_KEY="${{ secrets.JWT_SECRET_KEY }}"
+            --set-env-vars JWT_SECRET_KEY="${{ secrets.JWT_SECRET_KEY }}" \
+            --add-cloudsql-instances marine-potion-470417-c7:us-west1:library-system \
+            --set-env-vars DATABASE_URL="${{ secrets.DATABASE_URL }}"
