@@ -204,27 +204,3 @@ class TokenData(BaseModel):
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
-    token_type: str
-
-class TokenData(BaseModel):
-    email: Optional[str] = None
-
-class LoginRequest(BaseModel):
-    email: EmailStr
-    password: str
-
-# Book models
-class BookBase(BaseModel):
-    title: str
-    author: str
-    price: float
-
-class BookCreate(BookBase):
-    pass
-
-class BookResponse(BookBase):
-    id: int
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
