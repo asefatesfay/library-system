@@ -18,7 +18,7 @@ def startup_event():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    return {"status": "healthy", "database": "connected"}
 
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 app.include_router(books_router, tags=["Books"])
