@@ -1,5 +1,5 @@
 from enum import Enum
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, List
 from datetime import datetime
 
@@ -137,15 +137,54 @@ class HoldResponse(BaseModel):
         from_attributes = True
 
 # Fine Models
-class FineResponse(BaseModel):
+# Loan Models
+class LoanBase(BaseModel):
+    book_copy_id: int
+
+class LoanCreate(LoanBase):
+    pass
+
+class LoanRenew(BaseModel):
+    notes: Optional[str] = None
+
+class LoanReturn(BaseModel):
+    return_notes: Optional[str] = None
+    condition_notes: Optional[str] = None
+
+class LoanResponse(BaseModel):
+    id: int
+    user_id: int
+    book_copy_id: int
+    loan_date: datetime
+    due_date: datetime
+    return_date: Optional[datetime] = None
+    renewal_count: int = 0
+    status: str
+    notes: Optional[str] = None
+    
+    # Nested relationships
+    book_copy: BookCopyResponse
+    user: Optional[UserResponse] = None  # Only included for staff views
+    
+    class Config:
+        from_attributes = True
+
+# Fine Models
+class FineBase(BaseModel):
+    amount: float = Field(..., gt=0, description="Fine amount")
+    reason: str = Field(..., min_length=1, max_length=200)
+    
+class FineCreate(FineBase):
+    user_id: int
+    loan_id: Optional[int] = None
+
+class FineResponse(FineBase):
     id: int
     user_id: int
     loan_id: Optional[int] = None
-    amount: float
-    reason: str
     fine_date: datetime
+    is_paid: bool = False
     paid_date: Optional[datetime] = None
-    is_paid: bool
     
     class Config:
         from_attributes = True
