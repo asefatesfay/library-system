@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  deploy-backend:
     runs-on: ubuntu-latest
 
     steps:
@@ -74,3 +74,72 @@ jobs:
             --set-env-vars JWT_SECRET_KEY="${{ secrets.JWT_SECRET_KEY }}" \
             --add-cloudsql-instances marine-potion-470417-c7:us-west1:library-system \
             --set-env-vars DATABASE_URL="${{ secrets.DATABASE_URL }}"
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    needs: deploy-backend  # Wait for backend to deploy first
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Get backend URL
+        id: backend-url
+        run: |
+          BACKEND_URL=$(gcloud run services describe library-system-api --region us-west1 --format="value(status.url)")
+          echo "backend_url=$BACKEND_URL" >> $GITHUB_OUTPUT
+          echo "Backend URL: $BACKEND_URL"
+
+      - name: Build and push Frontend Docker image
+        run: |
+          echo "Building Frontend Docker image for project ${{ secrets.GCP_PROJECT_ID }}"
+          BUILD_ID=$(gcloud builds submit frontend --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/library-system-frontend --async --format="value(id)" --config frontend/cloudbuild.yaml)
+          echo "Frontend Build ID: $BUILD_ID"
+          
+          # Wait for build to complete
+          echo "Waiting for frontend build to complete..."
+          while true; do
+            STATUS=$(gcloud builds describe $BUILD_ID --format="value(status)")
+            echo "Frontend build status: $STATUS"
+            if [ "$STATUS" = "SUCCESS" ]; then
+              echo "Frontend build completed successfully!"
+              break
+            elif [ "$STATUS" = "FAILURE" ] || [ "$STATUS" = "TIMEOUT" ] || [ "$STATUS" = "CANCELLED" ]; then
+              echo "Frontend build failed with status: $STATUS"
+              exit 1
+            fi
+            sleep 10
+          done
+
+      - name: Deploy Frontend to Cloud Run
+        run: |
+          echo "Deploying Frontend to Cloud Run in project ${{ secrets.GCP_PROJECT_ID }}"
+          gcloud run deploy library-system-frontend \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/library-system-frontend \
+            --region us-west1 \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-env-vars NEXT_PUBLIC_API_URL="${{ steps.backend-url.outputs.backend_url }}" \
+            --memory=512Mi \
+            --cpu=1 \
+            --min-instances=0 \
+            --max-instances=10 \
+            --concurrency=80 \
+            --timeout=300
+
+      - name: Get Frontend URL
+        run: |
+          FRONTEND_URL=$(gcloud run services describe library-system-frontend --region us-west1 --format="value(status.url)")
+          echo "🎉 Frontend deployed successfully!"
+          echo "📱 Frontend URL: $FRONTEND_URL"
+          echo "🔗 Backend URL: ${{ steps.backend-url.outputs.backend_url }}"
