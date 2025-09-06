@@ -137,9 +137,41 @@ jobs:
             --concurrency=80 \
             --timeout=300
 
-      - name: Get Frontend URL
+      - name: Get Frontend URL and Summary
         run: |
           FRONTEND_URL=$(gcloud run services describe library-system-frontend --region us-west1 --format="value(status.url)")
-          echo "🎉 Frontend deployed successfully!"
+          echo ""
+          echo "🎉🎉🎉 DEPLOYMENT SUCCESSFUL! 🎉🎉🎉"
+          echo "============================================"
           echo "📱 Frontend URL: $FRONTEND_URL"
-          echo "🔗 Backend URL: ${{ steps.backend-url.outputs.backend_url }}"
+          echo "🔗 Backend URL:  ${{ steps.backend-url.outputs.backend_url }}"
+          echo "============================================"
+          echo ""
+          echo "✅ Your Library System is now live!"
+          echo "📚 Beautiful hero image included"
+          echo "💰 Deployed with minimal resources for cost efficiency"
+          echo ""
+          echo "🌐 Visit your app: $FRONTEND_URL"
+          echo ""
+          
+          # Set as environment variable for potential use in other steps
+          echo "FRONTEND_URL=$FRONTEND_URL" >> $GITHUB_ENV
+          
+          # Also output to job summary
+          echo "## 🚀 Deployment Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Service | URL |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|-----|" >> $GITHUB_STEP_SUMMARY
+          echo "| 📱 Frontend | [$FRONTEND_URL]($FRONTEND_URL) |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🔗 Backend | [${{ steps.backend-url.outputs.backend_url }}](${{ steps.backend-url.outputs.backend_url }}) |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Library System deployed successfully with beautiful hero image!" >> $GITHUB_STEP_SUMMARY
+
+      - name: 🎯 Quick Access Links
+        run: |
+          echo ""
+          echo "🎯 QUICK ACCESS - Copy these URLs:"
+          echo "=================================="
+          echo "Frontend: $FRONTEND_URL"
+          echo "Backend:  ${{ steps.backend-url.outputs.backend_url }}"
+          echo "=================================="
