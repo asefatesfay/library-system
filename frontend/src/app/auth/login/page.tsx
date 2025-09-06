@@ -58,7 +58,7 @@ export default function LoginPage() {
               <h1 className="text-2xl font-bold text-gray-900">📚 Library System</h1>
             </Link>
             <div className="text-sm text-gray-600">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link href="/auth/register" className="text-blue-600 hover:text-blue-800 font-semibold">
                 Register
               </Link>

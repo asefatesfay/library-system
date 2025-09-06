@@ -18,40 +18,40 @@ export default function BooksPage() {
   const router = useRouter();
 
   useEffect(() => {
-    checkAuth();
-  }, []);
+    const checkAuth = async () => {
+      const token = localStorage.getItem("access_token");
+      const tokenType = localStorage.getItem("token_type");
 
-  const checkAuth = async () => {
-    const token = localStorage.getItem("access_token");
-    const tokenType = localStorage.getItem("token_type");
-
-    if (!token) {
-      router.push("/auth/login");
-      return;
-    }
-
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
-        headers: {
-          "Authorization": `${tokenType} ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Authentication failed");
+      if (!token) {
+        router.push("/auth/login");
+        return;
       }
 
-      const userData = await response.json();
-      setUser(userData);
-    } catch (error) {
-      console.error("Auth check failed:", error);
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("token_type");
-      router.push("/auth/login");
-    } finally {
-      setLoading(false);
-    }
-  };
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+          headers: {
+            "Authorization": `${tokenType} ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Authentication failed");
+        }
+
+        const userData = await response.json();
+        setUser(userData);
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("token_type");
+        router.push("/auth/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
