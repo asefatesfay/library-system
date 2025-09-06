@@ -20,7 +20,7 @@ def create_seed_data():
                 "email": "admin@library.com",
                 "full_name": "Library Administrator",
                 "role": UserRoleEnum.ADMIN,
-                "password": "admin123",
+                "password": "password123",
                 "phone": "+1-555-0001",
                 "address": "123 Library Admin St, Book City, BC 12345"
             },
@@ -28,7 +28,7 @@ def create_seed_data():
                 "email": "librarian@library.com",
                 "full_name": "Jane Librarian",
                 "role": UserRoleEnum.LIBRARIAN,
-                "password": "librarian123",
+                "password": "password123",
                 "phone": "+1-555-0002",
                 "address": "456 Librarian Ave, Book City, BC 12345"
             },
@@ -36,7 +36,7 @@ def create_seed_data():
                 "email": "member@library.com",
                 "full_name": "John Member",
                 "role": UserRoleEnum.MEMBER,
-                "password": "member123",
+                "password": "password123",
                 "phone": "+1-555-0003",
                 "address": "789 Member Dr, Book City, BC 12345"
             },

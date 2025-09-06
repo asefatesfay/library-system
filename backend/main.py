@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from routes.books import router as books_router
 from routes.users import router as users_router
@@ -12,6 +13,20 @@ from database import create_tables
 from seed_data import create_seed_data
 
 app = FastAPI(title="Library Management System", version="1.0.0")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:3001", 
+        "https://*.run.app",  # Allow Google Cloud Run domains
+        "*"  # Allow all origins for development
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Health check endpoint
 @app.get("/health")
