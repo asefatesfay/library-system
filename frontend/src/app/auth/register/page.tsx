@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Header from "../../../components/Header";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -63,21 +64,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <Link href="/" className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">📚 Library System</h1>
-            </Link>
-            <div className="text-sm text-gray-600">
-              Already have an account?{" "}
-              <Link href="/auth/login" className="text-blue-600 hover:text-blue-800 font-semibold">
-                Sign in
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Register Form */}
       <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

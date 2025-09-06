@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Header from "../../components/Header";
 
 interface User {
   id: number;
@@ -53,12 +54,6 @@ export default function BooksPage() {
     checkAuth();
   }, [router]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("token_type");
-    router.push("/");
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
@@ -73,29 +68,7 @@ export default function BooksPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <Link href="/" className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">📚 Library System</h1>
-            </Link>
-            <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-600">
-                Welcome, <span className="font-semibold">{user?.full_name}</span>
-                <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                  {user?.role}
-                </span>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="text-sm text-gray-600 hover:text-gray-900 border border-gray-300 px-3 py-1 rounded hover:bg-gray-50"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
