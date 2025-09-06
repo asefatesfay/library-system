@@ -30,6 +30,21 @@ build:
 rebuild:
 	docker-compose down && docker-compose build && docker-compose up -d
 
+# Restart backend service
+.PHONY: restart-backend
+restart-backend:
+	docker-compose restart backend
+
+# Restart frontend service
+.PHONY: restart-frontend
+restart-frontend:
+	docker-compose restart frontend
+
+# Restart database service
+.PHONY: restart-db
+restart-db:
+	docker-compose restart db
+
 # View logs
 .PHONY: logs
 logs:
@@ -116,6 +131,21 @@ build-podman:
 .PHONY: rebuild-podman
 rebuild-podman:
 	podman-compose down && podman-compose build && podman-compose up -d
+
+# Restart backend service (Podman)
+.PHONY: restart-backend-podman
+restart-backend-podman:
+	podman-compose restart backend
+
+# Restart frontend service (Podman)
+.PHONY: restart-frontend-podman
+restart-frontend-podman:
+	podman-compose restart frontend
+
+# Restart database service (Podman)
+.PHONY: restart-db-podman
+restart-db-podman:
+	podman-compose restart db
 
 # View logs (Podman)
 .PHONY: logs-podman
