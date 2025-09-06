@@ -36,7 +36,7 @@ export default function Home() {
                 Browse Books
               </Link>
               <Link 
-                href="http://localhost:8001/docs" 
+                href={`${process.env.NEXT_PUBLIC_API_URL}/docs`}
                 className="text-lg text-white hover:text-blue-300 transition-colors drop-shadow-md border border-white/30 px-6 py-3 rounded-lg backdrop-blur-sm hover:border-blue-300/50"
               >
                 API Documentation →
@@ -126,7 +126,7 @@ export default function Home() {
             <Link href="https://github.com/asefatesfay/library-system" className="text-blue-400 hover:text-blue-300 transition-colors">
               View on GitHub
             </Link>
-            <Link href="http://localhost:8001/docs" className="text-blue-400 hover:text-blue-300 transition-colors">
+            <Link href={`${process.env.NEXT_PUBLIC_API_URL}/docs`} className="text-blue-400 hover:text-blue-300 transition-colors">
               API Documentation
             </Link>
           </div>
