@@ -1,51 +1,273 @@
-# Library System API
+# Library Management System
 
-A simple FastAPI-based library system for managing books and users.
+A comprehensive FastAPI-based library management system with full CRUD operations, user authentication, book lending, holds management, and member administration.
 
-## Requirements
-- Python 3.8+
-- FastAPI
-- Uvicorn
+## 🚀 Features
 
-## Installation
-1. Clone the repository:
+### 📚 Book Management
+- Complete catalog browsing with search and filtering
+- Book availability tracking with multiple copies
+- ISBN, genre, publisher, and publication year support
+- Staff-only book creation, updates, and management
+- Barcode generation for book copies
+
+### 👥 User Management
+- Role-based access control (Admin, Librarian, Member)
+- User registration and profile management
+- Membership statistics and activity tracking
+- Password hashing with bcrypt
+
+### 🔄 Loan System
+- Book borrowing with automatic due dates
+- Loan renewals (up to 2 times per book)
+- Return processing with condition tracking
+- Overdue fine calculation and management
+- Loan history and statistics
+
+### 📋 Hold/Reservation System
+- Book hold placement with queue management
+- Automatic notifications when books become available
+- Hold expiration and cancellation
+- Queue position tracking
+
+### 💰 Fine Management
+- Automatic overdue fine calculation
+- Fine payment processing
+- Fine history and reporting
+- Admin fine waiver capabilities
+
+### 🔐 Authentication & Security
+- JWT-based authentication
+- Role-based authorization
+- Secure password hashing
+- Environment variable configuration
+
+## 🛠 Technology Stack
+
+- **Backend**: FastAPI (Python)
+- **Database**: PostgreSQL (Production) / SQLite (Development)
+- **Authentication**: JWT with python-jose
+- **Password Hashing**: bcrypt via passlib
+- **ORM**: SQLAlchemy
+- **Validation**: Pydantic
+- **Deployment**: Docker on Google Cloud Run
+- **CI/CD**: GitHub Actions
+
+## 📋 Requirements
+
+- Python 3.11+
+- PostgreSQL (for production)
+- FastAPI and dependencies (see requirements.txt)
+
+## 🚀 Installation & Setup
+
+### Local Development
+
+1. **Clone the repository:**
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/asefatesfay/library-system.git
    cd library-system
    ```
-2. Install dependencies:
+
+2. **Create virtual environment:**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
+
+3. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-## Running the API
-Start the server with Uvicorn:
-```bash
-uvicorn main:app --reload
-```
+4. **Set up environment variables:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
 
-The API will be available at `http://127.0.0.1:8000`.
+5. **Run the application:**
+   ```bash
+   uvicorn main:app --reload
+   ```
 
-## API Endpoints
-- `GET /books` — List all books
-- `POST /books` — Add a new book
-- `PUT /books/{id}` — Update a book
-- `DELETE /books/{id}` — Delete a book
-- `POST /users/register` — Register a new user
+The API will be available at `http://127.0.0.1:8000`
+API Documentation: `http://127.0.0.1:8000/docs`
 
-## Project Structure
+### Production Deployment
+
+The application is configured for deployment on Google Cloud Run with:
+- Automatic CI/CD via GitHub Actions
+- PostgreSQL database on Cloud SQL
+- Environment-based configuration
+- Docker containerization
+
+## 📖 API Endpoints
+
+### Authentication
+- `POST /auth/login` — User login
+- `POST /auth/register` — User registration
+
+### Books
+- `GET /books/` — Browse book catalog (with search/filters)
+- `GET /books/{book_id}` — Get book details
+- `GET /books/{book_id}/availability` — Check book availability
+- `POST /books/` — Add new book (Staff only)
+- `PUT /books/{book_id}` — Update book (Staff only)
+- `DELETE /books/{book_id}` — Remove book (Staff only)
+
+### Loans
+- `POST /loans/` — Borrow a book
+- `GET /loans/` — Get user's loans
+- `GET /loans/{loan_id}` — Get loan details
+- `PUT /loans/{loan_id}/renew` — Renew a loan
+- `PUT /loans/{loan_id}/return` — Return a book
+- `GET /loans/all` — Get all loans (Staff only)
+- `GET /loans/stats` — Loan statistics (Staff only)
+
+### Holds
+- `POST /holds/` — Place a hold on a book
+- `GET /holds/` — Get user's holds
+- `GET /holds/{hold_id}` — Get hold details
+- `PUT /holds/{hold_id}/cancel` — Cancel a hold
+- `GET /holds/all` — Get all holds (Staff only)
+- `PUT /holds/{hold_id}/fulfill` — Fulfill a hold (Staff only)
+
+### Members
+- `GET /members/` — List all members (Staff only)
+- `POST /members/` — Create new member (Admin only)
+- `GET /members/{member_id}` — Get member details
+- `PUT /members/{member_id}` — Update member (Staff only)
+- `GET /members/{member_id}/stats` — Member statistics
+- `PUT /members/{member_id}/deactivate` — Deactivate member (Admin only)
+
+### Users
+- `GET /users/me` — Get current user profile
+- `PUT /users/me` — Update user profile
+
+## 🏗 Project Structure
+
 ```
 library-system/
-  main.py
-  models.py
-  database.py
-  schemas.py
-  routes/
-    books.py
-    users.py
-  requirements.txt
-  README.md
+├── main.py                 # FastAPI application entry point
+├── database.py            # Database models and configuration
+├── models.py              # Pydantic schemas
+├── auth.py                # Authentication and authorization
+├── seed_data.py           # Database seeding with sample data
+├── requirements.txt       # Python dependencies
+├── Dockerfile            # Container configuration
+├── .env.example          # Environment variables template
+├── routes/
+│   ├── auth.py           # Authentication endpoints
+│   ├── books.py          # Book management endpoints
+│   ├── loans.py          # Loan management endpoints
+│   ├── holds.py          # Hold/reservation endpoints
+│   ├── members.py        # Member management endpoints
+│   └── users.py          # User profile endpoints
+├── .github/
+│   └── workflows/
+│       └── deploy.yml    # CI/CD pipeline configuration
+└── README.md
 ```
 
-## Notes
-- This is a learning project. Feel free to expand features and add more routes.
+## 🎯 User Roles & Permissions
+
+### Member (Default)
+- Browse book catalog
+- Borrow and return books
+- Place and cancel holds
+- View personal loan/hold history
+- Update own profile
+
+### Librarian
+- All Member permissions
+- View all loans and holds
+- Process returns and fulfill holds
+- View member statistics
+- Manage book copies
+
+### Admin
+- All Librarian permissions
+- Create and manage books
+- Create and deactivate members
+- Access system-wide statistics
+- Waive fines
+
+## 🔧 Configuration
+
+### Environment Variables
+
+```bash
+# Database
+DATABASE_URL=postgresql://user:password@host:port/dbname
+
+# Authentication
+JWT_SECRET_KEY=your-secret-key-here
+JWT_ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# Application
+ENVIRONMENT=production|development
+```
+
+### Database Configuration
+
+The application supports both SQLite (development) and PostgreSQL (production):
+
+- **Development**: Uses `sqlite:///./library.db`
+- **Production**: Uses PostgreSQL via `DATABASE_URL` environment variable
+
+## 📊 Sample Data
+
+The application includes a seeding system that creates:
+- 10 classic books with multiple copies
+- 5 users with different roles
+- Sample loan and hold data
+- Realistic library catalog
+
+Run with: The application will automatically seed data on startup if tables are empty.
+
+## 🚢 Deployment
+
+### Google Cloud Run
+
+1. Set up Cloud SQL PostgreSQL instance
+2. Configure GitHub secrets for deployment
+3. Push to main branch triggers automatic deployment
+
+### Environment Variables for Production
+
+Set these in your deployment environment:
+- `DATABASE_URL`: PostgreSQL connection string
+- `JWT_SECRET_KEY`: Strong secret for JWT signing
+- Other configuration as needed
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📝 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🎓 Learning Objectives
+
+This project demonstrates:
+- RESTful API design principles
+- Database relationships and ORM usage
+- Authentication and authorization
+- Role-based access control
+- File organization and project structure
+- Environment-based configuration
+- Modern Python web development practices
+- Cloud deployment and CI/CD
+
+## 🔗 Links
+
+- **Live API**: [Deployed on Google Cloud Run]
+- **API Documentation**: Visit `/docs` endpoint for interactive Swagger UI
+- **Repository**: [GitHub Repository](https://github.com/asefatesfay/library-system)
