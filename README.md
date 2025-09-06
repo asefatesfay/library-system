@@ -54,6 +54,7 @@ A comprehensive FastAPI-based library management system with full CRUD operation
 ## 🛠 Technology Stack
 
 - **Backend**: FastAPI (Python)
+- **Frontend**: React/Next.js (Coming Soon)
 - **Database**: PostgreSQL (Production) / SQLite (Development)
 - **Authentication**: JWT with python-jose
 - **Password Hashing**: bcrypt via passlib
@@ -72,10 +73,12 @@ A comprehensive FastAPI-based library management system with full CRUD operation
 
 ### Local Development
 
+#### Backend Setup
+
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/asefatesfay/library-system.git
-   cd library-system
+   cd library-system/backend
    ```
 
 2. **Create virtual environment:**
@@ -95,13 +98,21 @@ A comprehensive FastAPI-based library management system with full CRUD operation
    # Edit .env with your configuration
    ```
 
-5. **Run the application:**
+5. **Run the backend:**
    ```bash
    uvicorn main:app --reload
    ```
 
 The API will be available at `http://127.0.0.1:8000`
 API Documentation: `http://127.0.0.1:8000/docs`
+
+#### Frontend Setup (Coming Soon)
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
 ### Production Deployment
 
@@ -175,29 +186,35 @@ The application is configured for deployment on Google Cloud Run with:
 
 ```
 library-system/
-├── main.py                    # FastAPI application entry point
-├── database.py               # Database models and configuration
-├── models.py                 # Pydantic schemas
-├── auth.py                   # Authentication and authorization
-├── seed_data.py              # Database seeding with sample data
-├── notification_service.py   # Notification automation service
-├── requirements.txt          # Python dependencies
-├── Dockerfile               # Container configuration
-├── .env.example             # Environment variables template
-├── routes/
-│   ├── auth.py              # Authentication endpoints
-│   ├── books.py             # Book management endpoints
-│   ├── loans.py             # Loan management endpoints
-│   ├── holds.py             # Hold/reservation endpoints
-│   ├── fines.py             # Fine management endpoints
-│   ├── notifications.py     # Notification endpoints
-│   ├── members.py           # Member management endpoints
-│   └── users.py             # User profile endpoints
+├── README.md                  # Project overview and documentation
+├── .gitignore                 # Git ignore rules
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml       # CI/CD pipeline configuration
-└── README.md
-└── README.md
+│       └── deploy.yml         # CI/CD pipeline configuration
+├── backend/                   # FastAPI Backend Application
+│   ├── main.py               # FastAPI application entry point
+│   ├── database.py           # Database models and configuration
+│   ├── models.py             # Pydantic schemas
+│   ├── auth.py               # Authentication and authorization
+│   ├── seed_data.py          # Database seeding with sample data
+│   ├── notification_service.py # Notification automation service
+│   ├── requirements.txt      # Python dependencies
+│   ├── Dockerfile           # Container configuration
+│   ├── .env.example         # Environment variables template
+│   └── routes/
+│       ├── auth.py          # Authentication endpoints
+│       ├── books.py         # Book management endpoints
+│       ├── loans.py         # Loan management endpoints
+│       ├── holds.py         # Hold/reservation endpoints
+│       ├── fines.py         # Fine management endpoints
+│       ├── notifications.py # Notification endpoints
+│       ├── members.py       # Member management endpoints
+│       └── users.py         # User profile endpoints
+└── frontend/                  # React Frontend Application (Coming Soon)
+    ├── src/
+    ├── public/
+    ├── package.json
+    └── ...
 ```
 
 ## 🎯 User Roles & Permissions

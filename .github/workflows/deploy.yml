@@ -42,7 +42,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           echo "Building Docker image for project ${{ secrets.GCP_PROJECT_ID }}"
-          BUILD_ID=$(gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/library-system-api --async --format="value(id)")
+          BUILD_ID=$(gcloud builds submit --source backend --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/library-system-api --async --format="value(id)")
           echo "Build ID: $BUILD_ID"
           
           # Wait for build to complete
