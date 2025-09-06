@@ -48,6 +48,13 @@ class BookCopyStatusEnum(str, enum.Enum):
     DAMAGED = "damaged"
     LOST = "lost"
 
+class NotificationTypeEnum(str, enum.Enum):
+    GENERAL = "general"
+    BOOK_AVAILABLE = "book_available"
+    OVERDUE_REMINDER = "overdue_reminder"
+    HOLD_EXPIRING = "hold_expiring"
+    FINE_NOTICE = "fine_notice"
+
 # Database Models
 class User(Base):
     __tablename__ = "users"
@@ -67,6 +74,7 @@ class User(Base):
     loans = relationship("Loan", back_populates="user")
     holds = relationship("Hold", back_populates="user")
     fines = relationship("Fine", back_populates="user")
+    notifications = relationship("Notification", back_populates="user")
 
 class Book(Base):
     __tablename__ = "books"
@@ -149,6 +157,21 @@ class Fine(Base):
     # Relationships
     user = relationship("User", back_populates="fines")
     loan = relationship("Loan", back_populates="fines")
+
+class Notification(Base):
+    __tablename__ = "notifications"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    title = Column(String(200), nullable=False)
+    message = Column(Text, nullable=False)
+    notification_type = Column(Enum(NotificationTypeEnum), default=NotificationTypeEnum.GENERAL)
+    is_read = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    read_at = Column(DateTime)
+    
+    # Relationships
+    user = relationship("User", back_populates="notifications")
 
 # Create tables
 def create_tables():

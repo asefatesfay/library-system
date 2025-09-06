@@ -264,6 +264,13 @@ def return_book(
             fine_date=return_date
         )
         db.add(fine)
+        
+        # Send fine notification
+        try:
+            from notification_service import notify_fine_notice
+            notify_fine_notice(db, loan.user_id, fine_amount, "overdue book return")
+        except Exception as e:
+            print(f"Error sending fine notification: {e}")
     
     # Update loan
     loan.return_date = return_date
@@ -282,6 +289,15 @@ def return_book(
     loan.book_copy.book.available_copies += 1
     
     db.commit()
+    
+    # Send notifications to users with holds for this book
+    try:
+        from notification_service import notify_book_available
+        notifications_sent = notify_book_available(db, loan.book_copy.book.id, 1)
+    except Exception as e:
+        # Log the error but don't fail the return process
+        print(f"Error sending book available notifications: {e}")
+        notifications_sent = []
     
     return {
         "message": "Book returned successfully",

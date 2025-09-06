@@ -234,3 +234,17 @@ class MembershipStats(BaseModel):
     recent_loans: List[LoanResponse]
     current_holds: List[HoldResponse]
     is_active: bool
+
+# Notification Models
+class NotificationResponse(BaseModel):
+    id: int
+    user_id: int
+    title: str
+    message: str
+    notification_type: str
+    is_read: bool
+    created_at: datetime
+    read_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
