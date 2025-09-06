@@ -4,6 +4,8 @@ from routes.books import router as books_router
 from routes.users import router as users_router
 from routes.auth import router as auth_router
 from routes.loans import router as loans_router
+from routes.holds import router as holds_router
+from routes.members import router as members_router
 from database import create_tables
 from seed_data import create_seed_data
 
@@ -42,4 +44,6 @@ async def health_check():
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 app.include_router(books_router, tags=["Books"])
 app.include_router(loans_router, tags=["Loans"])
+app.include_router(holds_router, tags=["Holds"])
+app.include_router(members_router, tags=["Members"])
 app.include_router(users_router, tags=["Users"])

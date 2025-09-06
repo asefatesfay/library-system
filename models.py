@@ -37,6 +37,14 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    full_name: Optional[str] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    role: Optional[UserRole] = None
+    is_active: Optional[bool] = None
+
 class UserResponse(UserBase):
     id: int
     is_active: bool
@@ -117,26 +125,6 @@ class LoanReturn(BaseModel):
     return_notes: Optional[str] = None
     condition_notes: Optional[str] = None
 
-# Hold Models
-class HoldCreate(BaseModel):
-    book_id: int
-
-class HoldResponse(BaseModel):
-    id: int
-    user_id: int
-    book_id: int
-    hold_date: datetime
-    expiry_date: Optional[datetime] = None
-    status: HoldStatus
-    position_in_queue: Optional[int] = None
-    
-    # Nested objects
-    book: BookResponse
-    
-    class Config:
-        from_attributes = True
-
-# Fine Models
 # Loan Models
 class LoanBase(BaseModel):
     book_copy_id: int
@@ -204,3 +192,45 @@ class TokenData(BaseModel):
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
+
+# Hold Models
+class HoldBase(BaseModel):
+    book_id: int
+    notes: Optional[str] = None
+
+class HoldCreate(HoldBase):
+    pass
+
+class HoldCancel(BaseModel):
+    reason: Optional[str] = None
+
+class HoldResponse(BaseModel):
+    id: int
+    user_id: int
+    book_id: int
+    hold_date: datetime
+    queue_position: int
+    status: str
+    fulfilled_date: Optional[datetime] = None
+    expiry_date: Optional[datetime] = None
+    notes: Optional[str] = None
+    
+    # Nested relationships
+    book: BookResponse
+    user: Optional[UserResponse] = None  # Only included for staff views
+    
+    class Config:
+        from_attributes = True
+
+# Membership Statistics
+class MembershipStats(BaseModel):
+    member_since: datetime
+    total_loans: int
+    active_loans: int
+    overdue_loans: int
+    active_holds: int
+    outstanding_fines: float
+    total_fines_paid: float
+    recent_loans: List[LoanResponse]
+    current_holds: List[HoldResponse]
+    is_active: bool
