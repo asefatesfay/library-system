@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: library_user
       POSTGRES_PASSWORD: library_password
     ports:
-      - "5432:5432"
+      - "5433:5432"  # Changed from 5432 to 5433 to avoid conflict
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-db:/docker-entrypoint-initdb.d
@@ -33,7 +33,7 @@ services:
       - ACCESS_TOKEN_EXPIRE_MINUTES=30
       - ENVIRONMENT=development
     ports:
-      - "8000:8000"
+      - "8001:8000"  # Changed from 8000 to 8001 to avoid conflict
     volumes:
       - ./backend:/app
     depends_on:
@@ -53,10 +53,10 @@ services:
       dockerfile: Dockerfile
     container_name: library-frontend
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:8001
       - NODE_ENV=development
     ports:
-      - "3000:3000"
+      - "3001:3000"  # Changed from 3000 to 3001 to avoid conflict
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -70,7 +70,7 @@ services:
     image: redis:7-alpine
     container_name: library-redis
     ports:
-      - "6379:6379"
+      - "6380:6379"  # Changed from 6379 to 6380 to avoid conflict
     volumes:
       - redis_data:/data
 
@@ -79,7 +79,7 @@ services:
     image: adminer
     container_name: library-adminer
     ports:
-      - "8080:8080"
+      - "8081:8080"  # Changed from 8080 to 8081 to avoid conflict
     depends_on:
       - db
     environment:

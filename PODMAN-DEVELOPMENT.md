@@ -17,25 +17,25 @@ podman-compose up
 ```
 
 That's it! Your full-stack application will be running on:
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8000
-- **API Documentation**: http://localhost:8000/docs
-- **Database Admin**: http://localhost:8080 (Adminer)
+- **Frontend**: http://localhost:3001
+- **Backend API**: http://localhost:8001
+- **API Documentation**: http://localhost:8001/docs
+- **Database Admin**: http://localhost:8081 (Adminer)
 
 ## 📋 Services
 
 ### Core Services
 | Service | Port | URL | Description |
 |---------|------|-----|-------------|
-| Frontend | 3000 | http://localhost:3000 | Next.js React application |
-| Backend | 8000 | http://localhost:8000 | FastAPI Python application |
-| Database | 5432 | localhost:5432 | PostgreSQL database |
+| Frontend | 3001 | http://localhost:3001 | Next.js React application |
+| Backend | 8001 | http://localhost:8001 | FastAPI Python application |
+| Database | 5433 | localhost:5433 | PostgreSQL database |
 
 ### Development Tools
 | Service | Port | URL | Description |
 |---------|------|-----|-------------|
-| Adminer | 8080 | http://localhost:8080 | Database management interface |
-| Redis | 6379 | localhost:6379 | Caching (optional) |
+| Adminer | 8081 | http://localhost:8081 | Database management interface |
+| Redis | 6380 | localhost:6380 | Caching (optional) |
 
 ## 🛠 Development Commands
 
@@ -99,7 +99,7 @@ SELECT * FROM books LIMIT 5;
 ```
 
 ### Database Management UI
-Access Adminer at http://localhost:8080
+Access Adminer at http://localhost:8081
 - **System**: PostgreSQL
 - **Server**: db
 - **Username**: library_user
@@ -111,7 +111,7 @@ Access Adminer at http://localhost:8080
 ### Backend Development
 ```bash
 # The backend automatically reloads on code changes
-# Access API docs at http://localhost:8000/docs
+# Access API docs at http://localhost:8001/docs
 
 # Run tests
 podman-compose exec backend pytest
@@ -127,7 +127,7 @@ podman-compose logs -f backend
 ### Frontend Development
 ```bash
 # The frontend automatically reloads on code changes
-# Access at http://localhost:3000
+# Access at http://localhost:3001
 
 # Install new packages
 podman-compose exec frontend npm install package_name
@@ -240,7 +240,7 @@ podman-compose logs db
 ### Container Health Checks
 ```bash
 # Check backend health
-curl http://localhost:8000/health
+curl http://localhost:8001/health
 
 # Check database connection
 podman-compose exec db pg_isready -U library_user

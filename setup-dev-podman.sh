@@ -31,7 +31,7 @@ sleep 30
 
 # Test backend health
 echo "🔍 Testing backend health..."
-if curl -f http://localhost:8000/health > /dev/null 2>&1; then
+if curl -f http://localhost:8001/health > /dev/null 2>&1; then
     echo "✅ Backend is healthy"
 else
     echo "❌ Backend health check failed"
@@ -39,7 +39,7 @@ fi
 
 # Test frontend
 echo "🔍 Testing frontend..."
-if curl -f http://localhost:3000 > /dev/null 2>&1; then
+if curl -f http://localhost:3001 > /dev/null 2>&1; then
     echo "✅ Frontend is accessible"
 else
     echo "❌ Frontend is not accessible"
@@ -55,10 +55,10 @@ fi
 
 echo ""
 echo "🎉 Podman setup complete! Your services are running on:"
-echo "   Frontend:  http://localhost:3000"
-echo "   Backend:   http://localhost:8000"
-echo "   API Docs:  http://localhost:8000/docs"
-echo "   DB Admin:  http://localhost:8080"
+echo "   Frontend:  http://localhost:3001"
+echo "   Backend:   http://localhost:8001"
+echo "   API Docs:  http://localhost:8001/docs"
+echo "   DB Admin:  http://localhost:8081"
 echo ""
 echo "📋 Demo credentials:"
 echo "   Admin:     admin@library.com / password123"
