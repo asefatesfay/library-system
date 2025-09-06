@@ -71,6 +71,41 @@ A comprehensive FastAPI-based library management system with full CRUD operation
 
 ## 🚀 Installation & Setup
 
+### 🐳 Container Development (Recommended)
+
+The fastest way to get started is using containers. Choose your preferred tool:
+
+#### Docker Compose
+```bash
+# Clone repository
+git clone https://github.com/asefatesfay/library-system.git
+cd library-system
+
+# Start everything with one command
+docker-compose up
+```
+
+#### Podman Compose
+```bash
+# Clone repository
+git clone https://github.com/asefatesfay/library-system.git
+cd library-system
+
+# Start everything with Podman
+podman-compose up
+# Or use the setup script
+./setup-dev-podman.sh
+```
+
+**That's it!** Your application will be running on:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000/docs
+- Database Admin: http://localhost:8080
+
+**Documentation:**
+- Docker: [DOCKER-DEVELOPMENT.md](DOCKER-DEVELOPMENT.md)
+- Podman: [PODMAN-DEVELOPMENT.md](PODMAN-DEVELOPMENT.md)
+
 ### Local Development
 
 #### Backend Setup
@@ -187,33 +222,38 @@ The application is configured for deployment on Google Cloud Run with:
 ```
 library-system/
 ├── README.md                  # Project overview and documentation
-├── .gitignore                 # Git ignore rules
+├── DOCKER-DEVELOPMENT.md      # Docker development guide
+├── docker-compose.yml         # Docker services configuration
+├── Makefile                   # Development commands
+├── .env.docker               # Docker environment variables
+├── .gitignore                # Git ignore rules
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml         # CI/CD pipeline configuration
-├── backend/                   # FastAPI Backend Application
-│   ├── main.py               # FastAPI application entry point
-│   ├── database.py           # Database models and configuration
-│   ├── models.py             # Pydantic schemas
-│   ├── auth.py               # Authentication and authorization
-│   ├── seed_data.py          # Database seeding with sample data
+│       └── deploy.yml        # CI/CD pipeline configuration
+├── backend/                  # FastAPI Backend Application
+│   ├── main.py              # FastAPI application entry point
+│   ├── database.py          # Database models and configuration
+│   ├── models.py            # Pydantic schemas
+│   ├── auth.py              # Authentication and authorization
+│   ├── seed_data.py         # Database seeding with sample data
 │   ├── notification_service.py # Notification automation service
-│   ├── requirements.txt      # Python dependencies
-│   ├── Dockerfile           # Container configuration
-│   ├── .env.example         # Environment variables template
+│   ├── requirements.txt     # Python dependencies
+│   ├── Dockerfile          # Backend container configuration
+│   ├── .env.example        # Environment variables template
 │   └── routes/
-│       ├── auth.py          # Authentication endpoints
-│       ├── books.py         # Book management endpoints
-│       ├── loans.py         # Loan management endpoints
-│       ├── holds.py         # Hold/reservation endpoints
-│       ├── fines.py         # Fine management endpoints
+│       ├── auth.py         # Authentication endpoints
+│       ├── books.py        # Book management endpoints
+│       ├── loans.py        # Loan management endpoints
+│       ├── holds.py        # Hold/reservation endpoints
+│       ├── fines.py        # Fine management endpoints
 │       ├── notifications.py # Notification endpoints
-│       ├── members.py       # Member management endpoints
-│       └── users.py         # User profile endpoints
-└── frontend/                  # React Frontend Application (Coming Soon)
+│       ├── members.py      # Member management endpoints
+│       └── users.py        # User profile endpoints
+└── frontend/                 # Next.js Frontend Application
     ├── src/
     ├── public/
     ├── package.json
+    ├── Dockerfile           # Frontend container configuration
     └── ...
 ```
 

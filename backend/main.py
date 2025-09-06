@@ -13,6 +13,11 @@ from seed_data import create_seed_data
 
 app = FastAPI(title="Library Management System", version="1.0.0")
 
+# Health check endpoint
+@app.get("/health")
+def health_check():
+    return {"status": "healthy", "service": "library-management-api"}
+
 # Create database tables and seed data on startup
 @app.on_event("startup")
 def startup_event():
