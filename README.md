@@ -29,12 +29,21 @@ A comprehensive FastAPI-based library management system with full CRUD operation
 - Automatic notifications when books become available
 - Hold expiration and cancellation
 - Queue position tracking
+- Staff hold fulfillment processing
 
 ### 💰 Fine Management
 - Automatic overdue fine calculation
-- Fine payment processing
-- Fine history and reporting
+- Complete fine payment processing with multiple payment methods
+- Fine history and comprehensive reporting
 - Admin fine waiver capabilities
+- Outstanding balance tracking and borrowing restrictions
+
+### 🔔 Notification System
+- Automatic book availability notifications
+- Overdue loan and hold expiration reminders
+- Fine payment and waiver notifications
+- Staff broadcast messaging to user groups
+- Read/unread status tracking with notification summaries
 
 ### 🔐 Authentication & Security
 - JWT-based authentication
@@ -133,6 +142,23 @@ The application is configured for deployment on Google Cloud Run with:
 - `GET /holds/all` — Get all holds (Staff only)
 - `PUT /holds/{hold_id}/fulfill` — Fulfill a hold (Staff only)
 
+### Fines
+- `GET /fines/` — Get user's fines
+- `GET /fines/{fine_id}` — Get fine details
+- `POST /fines/{fine_id}/pay` — Pay a fine
+- `GET /fines/summary` — Get fine summary
+- `GET /fines/all` — Get all fines (Staff only)
+- `POST /fines/{fine_id}/waive` — Waive a fine (Staff only)
+- `GET /fines/stats` — Fine statistics (Staff only)
+- `GET /fines/report` — Generate fine report (Staff only)
+
+### Notifications
+- `GET /notifications/` — Get user's notifications
+- `PUT /notifications/{notification_id}/read` — Mark notification as read
+- `PUT /notifications/mark-all-read` — Mark all notifications as read
+- `GET /notifications/summary` — Get notification summary
+- `POST /notifications/broadcast` — Broadcast notification (Staff only)
+
 ### Members
 - `GET /members/` — List all members (Staff only)
 - `POST /members/` — Create new member (Admin only)
@@ -149,24 +175,28 @@ The application is configured for deployment on Google Cloud Run with:
 
 ```
 library-system/
-├── main.py                 # FastAPI application entry point
-├── database.py            # Database models and configuration
-├── models.py              # Pydantic schemas
-├── auth.py                # Authentication and authorization
-├── seed_data.py           # Database seeding with sample data
-├── requirements.txt       # Python dependencies
-├── Dockerfile            # Container configuration
-├── .env.example          # Environment variables template
+├── main.py                    # FastAPI application entry point
+├── database.py               # Database models and configuration
+├── models.py                 # Pydantic schemas
+├── auth.py                   # Authentication and authorization
+├── seed_data.py              # Database seeding with sample data
+├── notification_service.py   # Notification automation service
+├── requirements.txt          # Python dependencies
+├── Dockerfile               # Container configuration
+├── .env.example             # Environment variables template
 ├── routes/
-│   ├── auth.py           # Authentication endpoints
-│   ├── books.py          # Book management endpoints
-│   ├── loans.py          # Loan management endpoints
-│   ├── holds.py          # Hold/reservation endpoints
-│   ├── members.py        # Member management endpoints
-│   └── users.py          # User profile endpoints
+│   ├── auth.py              # Authentication endpoints
+│   ├── books.py             # Book management endpoints
+│   ├── loans.py             # Loan management endpoints
+│   ├── holds.py             # Hold/reservation endpoints
+│   ├── fines.py             # Fine management endpoints
+│   ├── notifications.py     # Notification endpoints
+│   ├── members.py           # Member management endpoints
+│   └── users.py             # User profile endpoints
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml    # CI/CD pipeline configuration
+│       └── deploy.yml       # CI/CD pipeline configuration
+└── README.md
 └── README.md
 ```
 
