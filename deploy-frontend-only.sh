@@ -19,7 +19,6 @@ cd frontend
 
 # Build and deploy in one step using Cloud Build
 gcloud builds submit \
-  --tag gcr.io/$PROJECT_ID/$SERVICE_NAME \
   --config cloudbuild.yaml
 
 # Deploy to Cloud Run

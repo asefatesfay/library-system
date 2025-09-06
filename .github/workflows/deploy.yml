@@ -103,7 +103,7 @@ jobs:
       - name: Build and push Frontend Docker image
         run: |
           echo "Building Frontend Docker image for project ${{ secrets.GCP_PROJECT_ID }}"
-          BUILD_ID=$(gcloud builds submit frontend --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/library-system-frontend --async --format="value(id)" --config frontend/cloudbuild.yaml)
+          BUILD_ID=$(gcloud builds submit frontend --config frontend/cloudbuild.yaml --async --format="value(id)")
           echo "Frontend Build ID: $BUILD_ID"
           
           # Wait for build to complete
